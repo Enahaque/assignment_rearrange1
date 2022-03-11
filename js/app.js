@@ -3,11 +3,14 @@ let posts=[ ];
 const likedPostsId = [];
 const reportedPostsId = [];
 
+
 const getLikedPosts = () => {
+    
     return posts.filter((post) => likedPostsId.includes(post.id));
 };
 
 const getReportedPosts = () => {
+    
     return posts.filter((post) => reportedPostsId.includes(post.id));
 };
 
@@ -17,21 +20,27 @@ const isLiked = (id) => {
 };
 
 const addToLiked = (id) => {
-  console.log(id);
-  // likedPostsId.plus(id); // here is a uncaught type error;
+
+  likedPostsId.push(id);
    showPosts(posts);
 };
 
 const reportPost = (id) => {
+  
     reportedPostsId.push(id);
     const remainingPosts = posts.filter((post) => !reportedPostsId.includes(post.id));
     showPosts(remainingPosts);
 };
 
+
 const displayContent = (text) => {
-  // console.log(text);
-    return text.length < 30 ? 'text' : text.slice(0, 30) + "<span class='fw-bold'>... read more</span>";
-    
+  
+  if(text.length > 30){
+   return text.slice(0, 30) + "<span class='fw-bold'>... read more</span>";
+  }
+  else{
+    return text
+  } 
 };
 
 const switchTab = (id) => {
@@ -43,13 +52,17 @@ const switchTab = (id) => {
         document.getElementById( "liked" ).style.display = "block";
         document.getElementById( "posts" ).style.display = "none";
         document.getElementById( "reported" ).style.display = "none";
-
+        document.getElementById( "liked" ).innerHTML='';
+        document.getElementById("Questions").innerHTML = " ";//working here;
+        
         displayLikedPosts();
     } else {
         document.getElementById( "reported" ).style.display = "block";
         document.getElementById( "posts" ).style.display = "none";
         document.getElementById( "liked" ).style.display = "none";
-
+        document.getElementById('reported').innerHTML='';
+        document.getElementById("Questions").innerHTML = " ";//working here;
+        
         displayReportedPosts();
     }
 };
@@ -64,7 +77,7 @@ const createPost = (post) => {
                 <div class="post__profile">
 
                   <a href="#"class="post__avatar">
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80" alt="User Picture" />
+                  <img src="${post.userImage}" />
                   </a>
                 
                   <a href="#" class="post__user">phero</a>
@@ -123,9 +136,10 @@ const createPost = (post) => {
                   <div class="post__description">
                     <small>
                       <a class="post__name--underline" href="#">
-                          ${post.comments?.user}
+                          
+                          ${post.comments[0]?.user }
                       </a>
-                      ${post.comments?.text}
+                      ${post.comments[0]?.text}
                     
                     </small>
                   </div>
@@ -156,7 +170,8 @@ const displayLikedPosts = () => {
 
 const displayReportedPosts = () => {
     const reportedPosts = getReportedPosts();
-    posts.forEach((post) => {
+
+   reportedPosts.forEach((post) => {
         const div = createPost(post);
         document.getElementById( "reported" ).appendChild(div);
     });
